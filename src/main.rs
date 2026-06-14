@@ -4,7 +4,9 @@
 //! (`stats`), JSON (`export`), or a shareable card (`wrapped`).
 
 mod analysis;
+mod export;
 mod history;
+mod tui;
 mod wrapped;
 
 use std::path::PathBuf;
@@ -18,7 +20,7 @@ use history::{detect, HistoryEntry, Shell};
 #[command(
     name = "histwrapped",
     version,
-    about = "Spotify Wrapped for your terminal — see your command-line year in one screenshot."
+    about = "Spotify Wrapped for your terminal. See your command-line year in one screenshot."
 )]
 struct Cli {
     /// Path to a history file (overrides shell auto-detection).
@@ -41,8 +43,17 @@ struct Cli {
 enum Command {
     /// Print a quick summary of your command-line stats.
     Stats,
-    /// Render a shareable "wrapped" card (coming soon).
-    Wrapped,
+    /// Explore your stats in an interactive dashboard.
+    Tui,
+    /// Render a shareable "wrapped" card, optionally to an image file.
+    Wrapped {
+        /// Write the card to an SVG file instead of the terminal.
+        #[arg(long, value_name = "FILE")]
+        svg: Option<PathBuf>,
+        /// Write the card to a PNG file instead of the terminal.
+        #[arg(long, value_name = "FILE")]
+        png: Option<PathBuf>,
+    },
     /// Dump computed stats as JSON.
     Export,
 }
@@ -78,20 +89,31 @@ fn main() -> ExitCode {
 fn run(cli: &Cli) -> Result<(), String> {
     let entries = load_entries(cli)?;
     if entries.is_empty() {
-        return Err("no history entries found — is your history file empty?".to_string());
+        return Err("no history entries found, is your history file empty?".to_string());
     }
 
     let stats = analysis::analyze(&entries, cli.top);
 
-    match cli.command {
+    match &cli.command {
         Command::Stats => print_stats(&stats),
+        Command::Tui => tui::run(&stats)?,
         Command::Export => {
             let json = serde_json::to_string_pretty(&stats)
                 .map_err(|e| format!("failed to serialize stats: {e}"))?;
             println!("{json}");
         }
-        Command::Wrapped => {
-            println!("{}", wrapped::render(&stats));
+        Command::Wrapped { svg, png } => {
+            if let Some(path) = svg {
+                export::write_svg(&stats, path)?;
+                println!("wrote {}", path.display());
+            }
+            if let Some(path) = png {
+                export::write_png(&stats, path)?;
+                println!("wrote {}", path.display());
+            }
+            if svg.is_none() && png.is_none() {
+                println!("{}", wrapped::render(&stats));
+            }
         }
     }
 
