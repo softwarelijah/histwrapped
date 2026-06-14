@@ -66,8 +66,8 @@ pub fn to_svg(stats: &Stats) -> String {
         r##"<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{h}" viewBox="0 0 {W} {h}">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#2a1a4a"/>
-      <stop offset="100%" stop-color="#0d1b3a"/>
+      <stop offset="0%" stop-color="#14121d"/>
+      <stop offset="100%" stop-color="#040406"/>
     </linearGradient>
   </defs>
   <rect width="{W}" height="{h}" rx="24" fill="url(#bg)"/>
