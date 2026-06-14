@@ -5,6 +5,7 @@
 
 mod analysis;
 mod history;
+mod wrapped;
 
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -90,7 +91,7 @@ fn run(cli: &Cli) -> Result<(), String> {
             println!("{json}");
         }
         Command::Wrapped => {
-            println!("`wrapped` card rendering is coming on Day 4 — try `stats` for now.");
+            println!("{}", wrapped::render(&stats));
         }
     }
 
@@ -128,24 +129,33 @@ fn print_stats(stats: &analysis::Stats) {
     println!();
     println!("  total commands : {}", stats.total_commands);
     println!("  unique commands: {}", stats.unique_commands);
-    println!("  with timestamps: {}", stats.timestamped);
+    if stats.active_days > 0 {
+        println!("  active days    : {}", stats.active_days);
+        println!("  longest streak : {} days", stats.longest_streak);
+    }
+    println!("  personality    : {}", stats.personality);
     println!();
 
-    println!("  Top programs:");
-    for (i, c) in stats.top_programs.iter().enumerate() {
-        println!("    {:>2}. {:<20} {}", i + 1, c.command, c.count);
-    }
+    print_top("Top programs", &stats.top_programs, 20);
     println!();
-
-    println!("  Top commands:");
-    for (i, c) in stats.top_commands.iter().enumerate() {
-        println!("    {:>2}. {:<30} {}", i + 1, c.command, c.count);
-    }
+    print_top("Top subcommands", &stats.top_subcommands, 30);
+    println!();
+    print_top("Top commands", &stats.top_commands, 30);
 
     if stats.timestamped > 0 {
         println!();
         println!("  Activity by hour:");
         print_hour_histogram(&stats.hour_histogram);
+    }
+}
+
+fn print_top(title: &str, items: &[analysis::CommandCount], width: usize) {
+    if items.is_empty() {
+        return;
+    }
+    println!("  {title}:");
+    for (i, c) in items.iter().enumerate() {
+        println!("    {:>2}. {:<width$} {}", i + 1, c.command, c.count);
     }
 }
 
