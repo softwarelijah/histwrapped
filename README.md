@@ -11,7 +11,7 @@ summary card you can save as an image.
 ## Install
 
 ```sh
-git clone https://github.com/swemendez/histwrapped
+git clone https://github.com/softwarelijah/histwrapped
 cd histwrapped
 cargo install --path .
 ```
