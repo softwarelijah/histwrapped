@@ -1,32 +1,14 @@
 # histwrapped
 
-> **Spotify Wrapped for your terminal** — see your command-line year in one screenshot.
+> **Spotify Wrapped for your terminal.** See your command-line year in one screenshot.
 
 `histwrapped` reads your shell history and turns it into stats you'll actually
-want to share: your most-used commands, when you're most active, and a
-screenshot-ready "wrapped" card.
+want to share: your most-used commands, when you're most active, your longest
+streak, and a screenshot-ready "wrapped" card.
 
-> 🚧 **Early days.** zsh parsing, stats, and JSON export work today. The
-> interactive TUI and the shareable card are on the way — see the
-> [roadmap](#roadmap).
-
-## Demo
-
-<!-- TODO: drop a rendered `wrapped` card image here — it's the whole pitch. -->
-
-```text
-📊 histwrapped
-
-  total commands : 421
-  unique commands: 78
-
-  Top programs:
-     1. git                  163
-     2. clear                159
-     3. claude               26
-     4. npm                  24
-     5. cd                   21
-```
+<p align="center">
+  <img src="assets/wrapped.png" alt="A histwrapped card showing command counts, active days, streak, peak hour, and a personality badge" width="560">
+</p>
 
 ## Install
 
@@ -40,37 +22,52 @@ cargo install --path .
 ## Usage
 
 ```sh
-histwrapped stats              # quick text summary of your history
-histwrapped export             # dump stats as JSON
-histwrapped wrapped            # shareable card (coming soon)
-
-# options
-histwrapped --top 20 stats     # show longer top-N lists
-histwrapped --file ~/.zsh_history stats   # point at a specific file
-histwrapped --shell bash stats            # force a parser
+histwrapped stats                 # quick text summary
+histwrapped tui                   # interactive dashboard (q to quit)
+histwrapped wrapped               # print the shareable card
+histwrapped wrapped --png card.png   # save the card as an image
+histwrapped wrapped --svg card.svg   # save the card as SVG
+histwrapped export                # dump stats as JSON
 ```
+
+Options (work on any subcommand):
+
+```sh
+histwrapped --top 20 stats                  # longer top-N lists
+histwrapped --file ~/.zsh_history stats     # point at a specific file
+histwrapped --shell bash stats              # force a parser
+```
+
+## What you get
+
+- Top programs, top subcommands (`git status`, `cargo build`), and top full commands
+- Total and unique command counts
+- Active days, longest streak, and busiest hour (when your history has timestamps)
+- A playful "terminal personality" archetype
+- A shareable card as text, SVG, or PNG
 
 ## Supported shells
 
-| Shell | Status        | Notes                                              |
-|-------|---------------|----------------------------------------------------|
-| zsh   | ✅ supported  | extended + plain history; timestamps when present  |
-| bash  | 🚧 planned    | with and without `HISTTIMEFORMAT`                  |
-| fish  | 🚧 planned    | `fish_history` YAML-ish format                      |
+| Shell | Status      | Notes                                             |
+|-------|-------------|---------------------------------------------------|
+| zsh   | supported   | extended + plain history, multi-line commands     |
+| bash  | supported   | with and without `HISTTIMEFORMAT` timestamps      |
+| fish  | supported   | `fish_history` format                             |
 
-> **Tip:** zsh only records timestamps when extended history is on. Add
-> `setopt EXTENDED_HISTORY` to your `~/.zshrc` to unlock the time-of-day charts.
+> **Tip:** zsh only records timestamps with extended history on. Add
+> `setopt EXTENDED_HISTORY` to your `~/.zshrc` to unlock the streak and
+> time-of-day stats.
 
 ## Roadmap
 
-- [x] zsh history parsing (extended + plain)
+- [x] zsh, bash, and fish parsing
 - [x] core stats + JSON export
-- [ ] bash & fish parsers
-- [ ] interactive TUI (heatmaps, scrollable lists)
-- [ ] `wrapped` shareable card (PNG/SVG export)
-- [ ] "terminal personality" archetypes
+- [x] interactive TUI (top lists, hour bar chart)
+- [x] `wrapped` card with SVG/PNG export
+- [x] "terminal personality" archetypes
 - [ ] publish to crates.io
+- [ ] day-of-week heatmap
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).

@@ -2,7 +2,7 @@
 name = "histwrapped"
 version = "0.1.0"
 edition = "2021"
-description = "Spotify Wrapped for your terminal — see your command-line year in one screenshot."
+description = "Spotify Wrapped for your terminal. See your command-line year in one screenshot."
 license = "MIT"
 repository = "https://github.com/swemendez/histwrapped"
 readme = "README.md"
