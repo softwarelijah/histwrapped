@@ -38,7 +38,7 @@ pub fn to_svg(stats: &Stats) -> String {
         100,
         15,
         "400",
-        "#c9b8ff",
+        "#8a8f9c",
         "middle",
         "your command-line, wrapped",
     ));
@@ -64,14 +64,8 @@ pub fn to_svg(stats: &Stats) -> String {
 
     format!(
         r##"<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{h}" viewBox="0 0 {W} {h}">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#14121d"/>
-      <stop offset="100%" stop-color="#040406"/>
-    </linearGradient>
-  </defs>
-  <rect width="{W}" height="{h}" rx="24" fill="url(#bg)"/>
-  <rect x="6" y="6" width="{}" height="{}" rx="20" fill="none" stroke="#4a3a7a" stroke-width="2"/>
+  <rect width="{W}" height="{h}" rx="24" fill="#0a0a0c"/>
+  <rect x="6" y="6" width="{}" height="{}" rx="20" fill="none" stroke="#2a2a30" stroke-width="2"/>
   <g font-family="monospace">
 {body}  </g>
 </svg>
